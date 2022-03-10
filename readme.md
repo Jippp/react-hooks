@@ -1,7 +1,5 @@
 ## 常用的 hooks以及组件 总结
 
----
-
 ## hook
 
 ---
@@ -18,7 +16,27 @@
 const size = useSize(dom)
 ```
 
----
+### useImmer
+
+基于`immer`库封装的一个管理对象信息的hook
+
+react的`useState`对于对象的更新会很不方便，需要新创建一个对象来更新，使用该hook可以更优雅的解决管理对象状态的问题
+
+用法如下：
+
+```jsx
+const [info, updateInfo] = useImmer({
+  a: {
+    b: 'info'
+  }
+})
+
+// 更新时只需要直接操作即可
+updateInfo({ a } => {
+  a.b = 'updateInfo'
+})
+
+```
 
 ## 组件
 
