@@ -1,4 +1,4 @@
-import createCtx from './../../hooks/useCreateCtx'
+import createCtx from './../../utils/createCtx'
 
 const initialState = {
   message: 'provider initial message',
