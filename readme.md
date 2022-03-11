@@ -38,6 +38,39 @@ updateInfo({ a } => {
 
 ```
 
+### useCreateCtx
+
+基于`useImmer`以及`useContext`/`createContext`可以方便的进行状态管理，对于一些公用状态可以直接从顶部获取，而不需要一层一层传递状态，避免了中间组件的重渲染以及繁琐的写法
+
+用法如下：
+
+```jsx
+// 开发模块的顶层先将默认值传入
+import useCreateCtx from 'xxxuseCreateCtx'
+
+const initialState = xxx
+
+export const [useCtx, Provider] = useCreateCtx(initialState)
+
+// 使用时可以通过useCtx获取到顶部状态state以及更新状态的方法update
+// 再从顶层引入Provider，包裹一下子组件
+const {
+  state,
+  update
+} = useCtx()
+
+const Component = () => {
+  return (
+    <Provider>
+      {/* 子组件 */}
+    </Provider>  
+  )
+}
+
+```
+
+---
+
 ## 组件
 
 ---
