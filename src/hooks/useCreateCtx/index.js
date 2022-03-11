@@ -16,6 +16,7 @@ const useCreateCtx = (initialCtx = {}) => {
   }
 
   const useCtx = () => {
+    // 可以配合useContext而不需要在子组件中包裹Consumer来消费Provider的value
     return useContext(ctxValue)
   }
 
