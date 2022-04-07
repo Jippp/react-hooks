@@ -1,0 +1,49 @@
+.container {
+  width: 500px;
+  height: 200px;
+  border: 1px solid #ccc;
+  position: relative;
+  margin-top: 20px;
+  margin-left: 20px;
+  overflow: hidden;
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0 50px;
+  height: 100px;
+  white-space: nowrap;
+  transition: left ease-in-out 500ms;
+}
+
+.item {
+  height: 100px;
+  width: 120px;
+  background-color: aqua;
+  margin-left: 12px;
+  display: inline-block;
+}
+.item:first-of-type {
+  margin-left: 0;
+}
+
+.left, .right {
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 100px;
+  /* border: 1px solid red; */
+  text-align: center;
+  line-height: 100px;
+  cursor: pointer;
+}
+.left {
+  left: 0;
+  background: linear-gradient(to right, #eee 70%, rgba(255, 255, 255, 0))
+}
+.right {
+  right: 0;
+  background: linear-gradient(to left, #eee 70%, rgba(255, 255, 255, 0))
+}
