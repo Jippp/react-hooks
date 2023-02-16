@@ -1,18 +1,18 @@
 import { createContext, useContext } from 'react'
+import { Draft } from 'immer'
 import useImmer from '../../hooks/useImmer'
 
-const useCreateCtx = (initialCtx = {}) => {
-
+function createCtx<T extends {}>(initialCtx: T) {
   // 默认的context中的值
   const ctxValue = createContext({
-    state: '',
-    update: () => {}
+    state: initialCtx,
+    update: (() => {}) as (updater: (prevState: Draft<T>) => void | T) => void
   })
 
-  const Provider = (props) => {
+  const Provider = ({ children }: { children: React.ReactNode }) => {
     // 配合useImmer来管理context可以达到更好的更新效果
     const [state, update] = useImmer(initialCtx)
-    return <ctxValue.Provider value={{ state, update }} { ...props } />
+    return <ctxValue.Provider value={{ state, update }}>{children}</ctxValue.Provider>
   }
 
   const useCtx = () => {
@@ -20,7 +20,7 @@ const useCreateCtx = (initialCtx = {}) => {
     return useContext(ctxValue)
   }
 
-  return [useCtx, Provider]
+  return {useCtx, Provider} as const
 }
 
-export default useCreateCtx
+export default createCtx

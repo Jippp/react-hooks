@@ -77,7 +77,7 @@ const Component = () => {
 
 ### createStore
 
-对`createCtx`的改善，由于`createStore`每次更新之后都会导致其消费组件更新，所以对其进行优化。
+对`createCtx`的改善，由于`createCtx`每次更新之后都会导致其消费组件更新，所以对其进行优化。
 大致思路：使用的时候不再是`state.xxx`的形式了，而是通过`useSelector`这个hook来获取存储的数据，并且在这个hook当中对state进行了监听，如果发生了变化，就会调用`setState`来强制刷新这个组件，这样就可以保证其他组件不会更新，实现了更细粒度的更新
 
 代码可以看[demo](./src/demo/checkMiniStore/)

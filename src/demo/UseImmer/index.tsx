@@ -1,21 +1,23 @@
-import { useCallback, useState } from 'react'
+import { ChangeEvent, useCallback, useState } from 'react'
 
-import useImmer from './../../hooks/useImmer'
+import useImmer from '../../hooks/useImmer'
 import styled from 'styled-components'
+
+const defaultInfo = {
+  name: 'ji',
+  girlName: 'xu',
+  description: {
+    message: 'we are lover',
+  }
+}
 
 const ImmerDemo = () => {
   // 控制输入框显隐
   const [inputVisible, setInputVisible] = useState(false)
   // 用户信息
-  const [info, updateInfo] = useImmer({
-    name: 'ji',
-    girlName: 'xu',
-    description: {
-      message: 'we are lover',
-    }
-  })
+  const [info, updateInfo] = useImmer(defaultInfo)
 
-  const handleInputChange = useCallback((e) => {
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const message = e.target.value || ''
     updateInfo(({ description }) => {
       description.message = message
@@ -35,7 +37,7 @@ const ImmerDemo = () => {
         ) : null
       }
       {
-        inputVisible ? <input type="text" onChange={ handleInputChange } onBlur={() => setInputVisible(false)} /> : null
+        inputVisible ? <input type="text" onChange={handleInputChange} onBlur={() => setInputVisible(false)} /> : null
       }
     </InfoContainer>
   )

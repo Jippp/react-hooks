@@ -1,4 +1,4 @@
-import createMiniStore from "./../../utils/createStore";
+import createMiniStore from "../../utils/createStore";
 // import createContext from "./../../utils/createCtx";
 
 const defaultStore = {

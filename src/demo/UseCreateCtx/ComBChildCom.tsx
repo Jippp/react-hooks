@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { ChangeEvent, useCallback } from 'react'
 import { useCtx } from './provider'
 
 // ComB组件的子组件
@@ -11,7 +11,7 @@ const ComBChildCom = () => {
     update,
   } = useCtx()
 
-  const handleChange = useCallback((e) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const message = e.target.value
     update(d => {
       d.info = message

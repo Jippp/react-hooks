@@ -1,22 +1,22 @@
-import { useRef } from 'react'
+import { FC, Fragment, useRef } from 'react'
 import { Provider, useDispatch } from './context'
 // import { Provider, useCtx } from './context'
 
 import Son from './son'
 import Daughter from './daughter'
 
-const Content = () => {
-  const inputRef = useRef(null)
-  const daughterRef = useRef(null)
+const Content: FC = () => {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const daughterRef = useRef<HTMLInputElement>(null)
   const update = useDispatch()
   // const { update } = useCtx()
 
   return (
-    <>
+    <Fragment>
       <input 
         ref={inputRef}
         type="text" 
-        onChange={(e) => {
+        onChange={() => {
           update(d => {
             d.sonName = inputRef.current ? inputRef.current.value : ''
           })
@@ -38,11 +38,11 @@ const Content = () => {
         placeholder='输入修改daughtername'
       />
       <Daughter />
-    </>
+    </Fragment>
   )
 }
 
-const MiniStore = () => {
+const MiniStore: FC = () => {
   return (
     <Provider>
       <Content />
