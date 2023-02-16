@@ -3,7 +3,7 @@ import { isEqual } from 'lodash'
 import { usePersistFn } from 'ahooks'
 import { Draft } from 'immer'
 import Pubsub from 'pubsub-js'
-import useImmer from '../../hooks/useImmer'
+import useImmer from '@/hooks/useImmer'
 
 // 强制刷新
 const useForceUpdate = () => {

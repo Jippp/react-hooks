@@ -1,6 +1,6 @@
 import { FC, useState, useMemo } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import './index.css'
+import './style.less'
 
 interface Props {
   listData: number[]

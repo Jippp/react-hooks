@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import { useSize } from '../../hooks/useSize'
+import { useSize } from '@/hooks/useSize'
 
 const UseSize = () => {
   const ref = useRef<HTMLDivElement>(null)

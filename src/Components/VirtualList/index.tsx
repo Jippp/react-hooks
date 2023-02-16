@@ -1,5 +1,5 @@
 import { FC, useState, useRef, useMemo, useEffect, useCallback } from 'react'
-import './index.css'
+import './style.less'
 
 // 子列表高度，固定为100
 const ITEMSIZE = 100

@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useState } from 'react'
 
-import useImmer from '../../hooks/useImmer'
+import useImmer from '@/hooks/useImmer'
 import styled from 'styled-components'
 
 const defaultInfo = {

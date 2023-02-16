@@ -1,10 +1,10 @@
 import { FC } from 'react'
-// import UseSize from './demo/UseSize'
-// import ImmerDemo from './demo/UseImmer';
-// import CreateCtxDemo from './demo/UseCreateCtx';
-// import MiniStore from './demo/checkMiniStore';
-import VirtualList from './Components/VirtualList'
-// import SlideCard from './Components/slideCard'
+// import UseSize from '@/demo/UseSize'
+// import ImmerDemo from '@/demo/UseImmer';
+// import CreateCtxDemo from '@/demo/UseCreateCtx';
+// import MiniStore from '@/demo/checkMiniStore';
+import VirtualList from '@/Components/VirtualList'
+// import SlideCard from '@/Components/slideCard'
 
 const App:FC = () => {
   return (

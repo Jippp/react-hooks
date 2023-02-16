@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { Draft } from 'immer'
-import useImmer from '../../hooks/useImmer'
+import useImmer from '@/hooks/useImmer'
 
 function createCtx<T extends {}>(initialCtx: T) {
   // 默认的context中的值
