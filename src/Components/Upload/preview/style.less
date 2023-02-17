@@ -1,0 +1,79 @@
+.jx-preview {
+  width: 180px;
+  height: 200px;
+  border-radius: 1em;
+  padding: 1.9rem;
+  background: rgb(245, 245, 245, .2);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  transition: 0.4s ease-out;
+  box-shadow: 0px 7px 20px rgba(43, 8, 37, 0.2);
+  /*Hover*/
+  &:hover {
+    transform: translateY(5%);
+  }
+  /*Image*/
+  .jx-preview-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 1em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: 0.4s ease-out;
+    filter: blur(4px);
+  }
+  .jx-preview-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+    z-index: 3;
+    color: #f5f5f5;
+    opacity: 0;
+    transform: translateY(20%);
+    transition: 0.5s;
+
+    /*Button*/
+    .jx-preview-button {
+      flex-shrink: 0;
+      cursor: pointer;
+      width: 50px;
+      padding: 0.6rem;
+      outline: none;
+      border: none;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      color: white;
+      font-weight: bold;
+      transition: 0.4s ease;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:hover {
+        backdrop-filter: blur(0px);
+        color: #f5f5f5;
+      }
+    }
+  }
+
+  &:hover .jx-preview-info {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  &:hover .jx-preview-img {
+    filter: blur(0);
+  }
+}
+
+
+
+
+
+
+
+
+
+
