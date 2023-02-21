@@ -19,3 +19,30 @@ export interface RequsetProps {
   onSuccess?: (data: any) => void,
   onError?: (err: Error | boolean) => void
 }
+
+export enum ChunkInfoEnum {
+  fileName = 'fileName',
+  chunkIndex = 'chunkIndex',
+  chunkCount = 'chunkCount',
+  fileHash = 'fileHash'
+}
+
+/** 分包上传的额外信息 */
+export interface ChunkInfoProps {
+  /** 文件名称 */
+  [ChunkInfoEnum.fileName]: string;
+  /** 包索引 */
+  [ChunkInfoEnum.chunkIndex]: string;
+  /** 文件hash */
+  [ChunkInfoEnum.fileHash]: string;
+}
+
+/** 合并请求的额外信息 */
+export interface MergeInfoProps {
+  /** 包数量 */
+  [ChunkInfoEnum.chunkCount]: string;
+  /** 文件名称 */
+  [ChunkInfoEnum.fileName]: string;
+  /** 文件hash */
+  [ChunkInfoEnum.fileHash]: string;
+}

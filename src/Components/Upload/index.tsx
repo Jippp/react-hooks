@@ -3,7 +3,7 @@ import { FC, useRef, useState, useEffect } from 'react'
 import { usePersistFn } from 'ahooks'
 
 import useImmer from '@/hooks/useImmer'
-import useUpload from './useUpload'
+import useUpload from './hooks/useUpload'
 import { UPLOADFILESPATH } from './config'
 import { UploadProps, UploadRequestProps } from './types'
 import Preview from './preview'
