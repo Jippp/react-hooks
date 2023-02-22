@@ -11,35 +11,59 @@ interface PreviewProps {
   file: File;
   loading: boolean;
   onUpload: Function;
+  onAbort: Function;
 }
 
-const Preview: FC<PreviewProps> = ({ file, loading, onUpload }) => {
+// 图片格式 用于预览判断
+const imgExitsReg = new RegExp(/png|pneg|jpg|jpeg|webp/)
 
-  const blobUrl = useMemo(() => {
-    const blob = new Blob([file])
-    return URL.createObjectURL(blob)
+const Preview: FC<PreviewProps> = ({ file, loading, onUpload, onAbort }) => {
+
+  const { blobUrl, fileExit } = useMemo(() => {
+    return {
+      blobUrl: URL.createObjectURL(file),
+      fileExit: file.type
+    }
   }, [file])
 
   const onLoad = usePersistFn(() => {
     URL.revokeObjectURL(blobUrl)
   })
 
-  const onClick = usePersistFn(() => {
+  const onUploadClick = usePersistFn(() => {
     if(!loading) {
       onUpload(file)
     }
   })
 
+  const onCancelClick = usePersistFn(() => {
+    if(loading) {
+      onAbort(file.name)
+    }
+  })
+
   return (
-    <PreviewContainer src={blobUrl} className="jx-preview" onLoad={onLoad}>
-      <div className="jx-preview-img"></div>
+    <PreviewContainer className="jx-preview" >
+      <div className="jx-preview-img">
+        {/* TODO 文件类型兼容 */}
+        {
+          imgExitsReg.test(fileExit) ? (
+            <img src={blobUrl} alt={file.name} width="100%" height='100%' onLoad={onLoad}/>
+          ) : (
+            <video autoPlay width="100%" height='100%'>
+              <source src={blobUrl} type={fileExit} onLoad={onLoad}/>
+            </video>
+          )
+        }
+        
+      </div>
       <div className="jx-preview-info">
-        <button className="jx-preview-button">预览</button>
+        <button className="jx-preview-button" onClick={onCancelClick}>{ loading ? '取消' : '重传' }</button>
         {
           loading ? <Loading /> : (
             <button 
               className="jx-preview-button"
-              onClick={onClick}
+              onClick={onUploadClick}
             >
               上传
             </button>
@@ -52,8 +76,8 @@ const Preview: FC<PreviewProps> = ({ file, loading, onUpload }) => {
 
 export default Preview
 
-const PreviewContainer = styled.div<{ src: string }>`
-  .jx-preview-img {
-    background: url(${({ src }) => src}) no-repeat 100% 100% / cover;
-  }
+const PreviewContainer = styled.div`
 `
+/* .jx-preview-img {
+  background: url(${({ src }) => src}) no-repeat 100% 100% / cover;
+} */

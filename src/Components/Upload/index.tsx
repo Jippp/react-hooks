@@ -23,7 +23,7 @@ const Upload:FC<UploadProps> = ({ url }) => {
 
   const [uploadReqProps, updateUploadReqProps] = useImmer(defaultUploadReqProps)
 
-  const { singleUpload, singleLoading } = useUpload(uploadReqProps)
+  const { singleUpload, singleAbort, singleLoading } = useUpload(uploadReqProps)
 
   // body拖拽阻止默认事件 防止打开
   useEffect(() => {
@@ -87,6 +87,7 @@ const Upload:FC<UploadProps> = ({ url }) => {
                 file={file}
                 loading={singleLoading[file.name] || false}
                 onUpload={singleUpload}
+                onAbort={singleAbort}
               />
             ))
           ) : '暂无待上传图片'

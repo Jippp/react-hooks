@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from "axios";
+
 export interface UploadProps {
   url: string,
 }
@@ -15,10 +17,16 @@ export interface UploadRequestProps {
 export interface RequsetProps {
   path: string,
   formData: FormData,
+  config?: AxiosRequestConfig<FormData>,
   onStart?: Function,
   onSuccess?: (data: any) => void,
   onError?: (err: Error | boolean) => void
 }
+
+export type RequestListType = Record<string, {
+  promise: Promise<unknown>,
+  controller: AbortController,
+} | null>
 
 export enum ChunkInfoEnum {
   fileName = 'fileName',

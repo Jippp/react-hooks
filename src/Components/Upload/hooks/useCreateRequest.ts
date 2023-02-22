@@ -8,14 +8,22 @@ import { CommonRequestProps, RequsetProps } from '../types'
 const useCreateRequest = ({ url }: CommonRequestProps) => {
   const request = axios.create({
     baseURL: url,
-    timeout: 60000,
+    timeout: 10000,
   })
 
   const postRequset = usePersistFn(({
-    path, formData, onStart, onSuccess, onError
+    path, formData, config, onStart, onSuccess, onError
   }: RequsetProps) => {
     isFunction(onStart) && onStart(true)
-    return request.post(path, formData).then(onSuccess).catch(onError)
+    const promise = new Promise((resolve, reject) => {
+      request.post(path, formData, config).then((data) => {
+        isFunction(onSuccess) && onSuccess(data);
+        resolve(data)
+      }, () => {
+        reject()
+      }).catch(onError)
+    })
+    return promise
   })
 
   return { request, postRequset }

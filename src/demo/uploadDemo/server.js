@@ -14,7 +14,7 @@ const MERGEFILESPATH = '/mergeFiles'
 /** 检查已上传文件的请求 */
 // const CHECKFILESPATH = '/checkFiles'
 /** 资源存储的路径 */
-const STATICPATH = path.join(__dirname, '/assets')
+const STATICPATH = path.join(__dirname, '/assets').replace(/\\/g, '/')
 /** 白名单 */
 const ALLOWORIGIN = ['http://localhost:3000', 'http://10.17.223.232:3000'];
 
@@ -45,7 +45,7 @@ app.use((ctx, next) => {
 const uploadFile = (ctx, files) => {
   const fileList = Object.values(files)
   const { chunkIndex, fileHash } = ctx.request.body
-  let responseMsg = ''
+  let responseMsg = '', status = 200
   if(fileList && fileList.length) {
     // 对文件重命名
     fileList.forEach(file => {
@@ -61,17 +61,19 @@ const uploadFile = (ctx, files) => {
       }else {
         newNamePath = `${STATICPATH}/${file.originalFilename}`
       }
+      
       fs.renameSync(oldNamePath, newNamePath)
     })
     responseMsg = 'file upload success!'
   }else {
+    status = 400
     responseMsg = 'no file!'
   }
+  ctx.response.status = status
   ctx.body = {
     msg: responseMsg
   }
 }
-
 /**
  * 大文件上传处理合并文件的请求
  * @param {*} ctx 
@@ -79,32 +81,46 @@ const uploadFile = (ctx, files) => {
  */
 const mergeFile = (ctx) => {
   const { fileName, chunkCount, fileHash } = ctx.request.body
-  // let responseMsg = ''
+  let responseMsg = '', status = 200
   const bigFileDirPath = path.join(STATICPATH, `/${fileName}`)
+  const readDirPath = `${STATICPATH}/${fileHash}`
   const writeStream = fs.createWriteStream(bigFileDirPath)
-
+  
   function merge(i) {
-    const readPath = `${STATICPATH}/${fileHash}/${fileHash}_${i}`;
-    console.log(readPath, fs.existsSync(readPath))
+    const readPath = `${readDirPath}/${fileHash}_${i}`;
+
     if(fs.existsSync(readPath)) {
       const readStream = fs.createReadStream(readPath)
+      // end: true 当读取结束时结束写入，如果是writable，则会自动调用writable.end()，即不可再写入
       readStream.pipe(writeStream, { end: false })
+      // 如果readable过程中发生错误，writable也不会自动关闭，需要手动触发writable.end()，防止内存泄露
       readStream.on('end', () => {
-        fs.unlink(readPath, (err) => {
-          if(err) console.log(err)
-        })
+        fs.unlinkSync(readPath)
         if(++i < chunkCount) {
           merge(i)
         }else {
-          fs.rmdirSync(bigFileDirPath)
+          writeStream.end()
+          fs.rmdir(readDirPath, err => {
+            if(err) console.log(err)
+          })
         }
       })
+      readStream.on('error', (err) => {
+        if(err) {
+          console.log(err)
+          writeStream.end()
+        }
+      })
+    }else {
+      status = 404
+      responseMsg = 'Upload Error: no find chunk!'
     }
   }
   merge(0)
 
+  ctx.response.status = status
   ctx.body = {
-    msg: 'Big File Upload Success!'
+    msg: responseMsg || 'Big file upload success!'
   }
 }
 
@@ -115,6 +131,7 @@ app.use(ctx => {
   }else if(url === MERGEFILESPATH) {
     mergeFile(ctx)
   }else {
+    ctx.response.status = 403
     ctx.body = {
       msg: 'Request Error!',
       reason: 'Can`t find path!'

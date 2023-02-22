@@ -14,15 +14,16 @@ const useRequest = ({ url }: CommonRequestProps) => {
   const { postRequset } = useCreateRequest({ url })
   // 再封装一层，绑定状态
   const post = usePersistFn(({
-    path, formData, fileName = '', setLoading, onStart, onSuccess, onError
+    path, formData, config, fileName = '', setLoading, onStart, onSuccess, onError
   }: RequsetProps & {
     fileName?: string,
-    setLoading?: (status: boolean) => void
+    setLoading?: (status: boolean) => void,
   }) => {
     const hasSetLoading = isFunction(setLoading)
     return postRequset({ 
       path, 
       formData,
+      config,
       onStart: () => {
         if(timerRef.current.get(fileName)) {
           clearTimeout(timerRef.current.get(fileName)!)
@@ -40,6 +41,7 @@ const useRequest = ({ url }: CommonRequestProps) => {
         isFunction(onSuccess) && onSuccess(data)
       },
       onError: (err) => {
+        console.log('%cerror', 'color: red; font-size: 20px', err);
         hasSetLoading && setLoading(false)
         isFunction(onError) && onError(err)
       }
