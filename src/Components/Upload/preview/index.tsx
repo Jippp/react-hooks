@@ -58,7 +58,7 @@ const Preview: FC<PreviewProps> = ({ file, loading, onUpload, onAbort }) => {
         
       </div>
       <div className="jx-preview-info">
-        <button className="jx-preview-button" onClick={onCancelClick}>{ loading ? '取消' : '重传' }</button>
+        <button className="jx-preview-button" onClick={onCancelClick}>{ loading ? '取消' : 'xx' }</button>
         {
           loading ? <Loading /> : (
             <button 

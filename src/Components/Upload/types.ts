@@ -23,10 +23,8 @@ export interface RequsetProps {
   onError?: (err: Error | boolean) => void
 }
 
-export type RequestListType = Record<string, {
-  promise: Promise<unknown>,
-  controller: AbortController,
-} | null>
+/** 中断请求使用，记录内容 文件名：中断方法 */
+export type RequestListType = Record<string, AbortController | null>
 
 export enum ChunkInfoEnum {
   fileName = 'fileName',
