@@ -23,6 +23,15 @@ const useSingleUpload = ({ url, path }: Pick<UploadRequestProps, 'path' | 'url'>
 
   const { post } = useRequest({ url })
 
+  // 获取设置loading的方法
+  const getSetLoading = usePersistFn((fileName: string) => {
+    return (status: boolean) => {
+      updateSingleLoading(d => {
+        d[fileName] = status
+      })
+    }
+  })
+
   // 大文件多包上传发请求
   const handleBigFile = usePersistFn((
     chunkList: (File | Blob)[],
@@ -51,13 +60,13 @@ const useSingleUpload = ({ url, path }: Pick<UploadRequestProps, 'path' | 'url'>
     checkFormData.set(ChunkInfoEnum.fileName, file.name)
     if(fileHash) checkFormData.set(ChunkInfoEnum.fileHash, fileHash)
     
-    return post({
+    return pLimit.run(() => post({
       path: CHECKFILESPATH,
       formData: checkFormData,
       onError: (err) => {
         console.log(err)
       }
-    }) as Promise<Record<string, boolean | number[]>>
+    })) as Promise<Record<string, boolean | number[]>>
   })
 
   // 大文件的合并请求
@@ -72,9 +81,9 @@ const useSingleUpload = ({ url, path }: Pick<UploadRequestProps, 'path' | 'url'>
     mergeFormData.set(ChunkInfoEnum.fileName, fileName)
     mergeFormData.set(ChunkInfoEnum.fileHash, hash)
 
-    return post({
+    return pLimit.run(() => post({
       path: MERGEFILESPATH, formData: mergeFormData, fileName, setLoading
-    })
+    }))
   })
 
   // 单个小文件或包上传的逻辑
@@ -82,7 +91,7 @@ const useSingleUpload = ({ url, path }: Pick<UploadRequestProps, 'path' | 'url'>
     file: File | Blob, 
     /** chunk名称，如果有值说明是大文件上传 */
     chunkName?: string, 
-    chunkInfo?: ChunkInfoProps
+    chunkInfo?: ChunkInfoProps,
   ) => {
     const controller = new AbortController()
     const formData = new FormData()
@@ -96,11 +105,7 @@ const useSingleUpload = ({ url, path }: Pick<UploadRequestProps, 'path' | 'url'>
     }
     
     // 大文件loading特殊处理：分片loading没必要记录
-    const setLoading = chunkName ? undefined : (status: boolean) => {
-      updateSingleLoading(d => {
-        d[resultFileName] = status
-      })
-    }
+    const setLoading = chunkName ? undefined : getSetLoading(resultFileName)
 
     const removeRequest = () => {
       updateRequestList(d => {
@@ -129,11 +134,7 @@ const useSingleUpload = ({ url, path }: Pick<UploadRequestProps, 'path' | 'url'>
   // 文件上传的主函数，暴露出去以供使用
   const singleUpload = usePersistFn(async (file: File) => {
     if(file.size > CHUNKSIZE) {
-      const setLoading = (status: boolean) => {
-        updateSingleLoading(d => {
-          d[file.name] = status
-        })
-      }
+      const setLoading = getSetLoading(file.name)
 
       setLoading(true)
 
@@ -146,20 +147,18 @@ const useSingleUpload = ({ url, path }: Pick<UploadRequestProps, 'path' | 'url'>
       // 检查文件上传情况，做不同的处理
       if(Array.isArray(currentResult) || !currentResult) {
         const list = handleBigFile(chunkList, file.name, hash, Array.isArray(currentResult) ? currentResult : undefined)
-        
-        Promise.all(list)
-          .then(() => {
-            mergeFileRequest(chunkCount, file.name, hash, setLoading)
-          }, () => {
-            setLoading(false)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+
+        Promise.all(list).then(() => {
+          mergeFileRequest(chunkCount, file.name, hash, setLoading)
+        }, () => {
+          setLoading(false)
+        }).catch(() => {
+          setLoading(false)
+        })
+
       }else {
         window.alert(`${file.name}已上传`)
       }
-      setLoading(false)
 
     }else {
       const checkFileResult = await checkFileRequest(file)

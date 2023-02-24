@@ -3,9 +3,13 @@
 }
 
 .jx-upload {
-  width: 120px;
+  width: 200px;
   height: 40px;
   cursor: pointer;
+}
+
+.jx-upload-all {
+  margin: 20px 0;
 }
 
 .jx-upload-button {
@@ -59,6 +63,14 @@
     border-top-color: #eff1f7;
     animation-play-state: running;
   }
+
+  &.jx-upload-choose-button {
+    display: flex;
+    align-items: center;
+    &:before, &:after {
+      display: none;
+    }
+  }
 }
 
 @keyframes downloadArrow {
@@ -85,7 +97,7 @@
 .jx-upload-preview {
   margin-top: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   flex-wrap: wrap;
   // div:not(:last-of-type) {
   //   margin-right: 10px

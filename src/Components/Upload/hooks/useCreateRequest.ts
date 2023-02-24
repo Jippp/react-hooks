@@ -20,6 +20,7 @@ const useCreateRequest = ({ url }: CommonRequestProps) => {
         isFunction(onSuccess) && onSuccess(data.data);
         resolve(data.data)
       }, () => {
+        isFunction(onError) && onError()
         reject()
       }).catch(onError)
     })
