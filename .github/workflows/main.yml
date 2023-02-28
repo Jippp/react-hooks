@@ -1,0 +1,29 @@
+name: AutoMerge
+
+on:
+  workflow_dispatch:
+  push:
+    branches: 
+      - xiaoxu
+  # 定时
+  schedule:
+    # 每周五0点定时触发
+    # 依次是mintue/hour/day of the month(1-31)/month(1-12)/day of the week(0-6) 
+    - cron: '0 0 * * 5'
+
+jobs:
+  # workflow自定义命令
+  merge:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2.4.2
+      # Runs a set of commands using the runners shell
+      - name: Run autoMerge Script
+        run: |
+          git config --global user.name "JX_PPP"
+          git config --global user.email "jhl2554937602@gmail.com"
+          git pull --unshallow
+          git merge --no-ff origin/xiaoxu -m "merge: auto merge"
+          git push origin master
