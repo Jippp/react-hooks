@@ -1,3 +1,6 @@
+/**
+ * 统一上传的处理
+ */
 import { useState, useEffect } from 'react'
 
 import { usePersistFn } from 'ahooks'
@@ -8,11 +11,11 @@ import useSingleUpload from './useSingleUpload'
 const useUpload = ({ url, path, files }: UploadRequestProps) => {
   const [allLoading, setAllLoading] = useState(false)
 
-  const { singleAbort, singleUpload, singleLoading } = useSingleUpload({ url, path })
+  const { singleAbort, singleUpload, singleStatus } = useSingleUpload({ url, path })
 
   useEffect(() => {
-    setAllLoading(Object.values(singleLoading).some(item => item))
-  }, [singleLoading])
+    setAllLoading(Object.values(singleStatus).some(item => item.loading))
+  }, [singleStatus])
 
   const uploadAll = usePersistFn(() => {
     if(files && files.length) {
@@ -26,7 +29,7 @@ const useUpload = ({ url, path, files }: UploadRequestProps) => {
     uploadAll, 
     singleUpload, 
     singleAbort,
-    singleLoading, 
+    singleStatus, 
     allLoading 
   }
 }

@@ -21,7 +21,7 @@ app.use(koaBody({
 
 // 跨域
 app.use((ctx, next) => {
-  if(ALLOWORIGIN.includes(ctx.request.header.origin)) {
+  if(ALLOWORIGIN.some(origin => ctx.request.header.origin.includes(origin))) {
     ctx.set('Access-Control-Allow-Headers', '*')
     ctx.set('Access-Control-Allow-Origin', ctx.request.header.origin)
   }

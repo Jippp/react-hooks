@@ -5,7 +5,7 @@ import { isFunction } from 'lodash'
 
 import useCreateRequest from './useCreateRequest'
 import { RequsetProps, CommonRequestProps } from '../types'
-import { LOADINGMINTIME } from '../config'
+import { delayLoading } from '../util'
 
 const useRequest = ({ url }: CommonRequestProps) => {
   // 记录定时器id 后续清除
@@ -27,21 +27,18 @@ const useRequest = ({ url }: CommonRequestProps) => {
       onStart: () => {
         if(timerRef.current.get(fileName)) {
           clearTimeout(timerRef.current.get(fileName)!)
-          timerRef.current.set(fileName, null)
+          timerRef.current.delete(fileName)
         }
         hasSetLoading && setLoading(true)
         isFunction(onStart) && onStart()
       },
       onSuccess: (data) => {
         if(hasSetLoading) {
-          timerRef.current.set(fileName, setTimeout(() => {
-            setLoading(false)
-          }, LOADINGMINTIME))
+          timerRef.current.set(fileName, delayLoading(setLoading, false))
         }
         isFunction(onSuccess) && onSuccess(data)
       },
       onError: (err) => {
-        console.log('%cerror', 'color: red; font-size: 20px', err);
         hasSetLoading && setLoading(false)
         isFunction(onError) && onError(err)
       }

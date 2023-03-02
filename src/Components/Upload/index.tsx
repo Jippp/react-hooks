@@ -1,13 +1,12 @@
-// 文件上传组件
-import { FC, useRef, useState, useEffect } from 'react'
+import { FC, useRef, useState, useEffect, useMemo } from 'react'
 import { usePersistFn } from 'ahooks'
 
 import useImmer from '@/hooks/useImmer'
 import useUpload from './hooks/useUpload'
 import { UPLOADFILESPATH } from './config'
 import { UploadProps, UploadRequestProps } from './types'
-import Loading from './loading'
-import Preview from './preview'
+import Loading from './components/loading'
+import Preview from './components/preview'
 
 import './style.less'
 
@@ -24,7 +23,7 @@ const Upload:FC<UploadProps> = ({ url }) => {
 
   const [uploadReqProps, updateUploadReqProps] = useImmer(defaultUploadReqProps)
 
-  const { singleUpload, singleAbort, singleLoading, uploadAll, allLoading } = useUpload(uploadReqProps)
+  const { singleUpload, singleAbort, singleStatus, uploadAll, allLoading } = useUpload(uploadReqProps)
 
   // body拖拽阻止默认事件 防止打开
   useEffect(() => {
@@ -43,6 +42,7 @@ const Upload:FC<UploadProps> = ({ url }) => {
       d.files = files
     })
   }, [files, updateUploadReqProps])
+  
   useEffect(() => {
     updateUploadReqProps(d => {
       d.url = url
@@ -66,6 +66,10 @@ const Upload:FC<UploadProps> = ({ url }) => {
     setFiles(e.dataTransfer.files)
   })
 
+  const moreFile = useMemo(() => files && files.length > 1, [files])
+
+  console.log('%caa', 'color: red; font-size: 20px', singleStatus);
+
   return (
     <div className="jx-upload-wrapper">
       <div 
@@ -78,12 +82,15 @@ const Upload:FC<UploadProps> = ({ url }) => {
       >
         <input type="file" multiple className='no-display' ref={inputRef} onChange={onInputChange} />
         <button className="jx-upload-button jx-upload-choose-button">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+            <path fill="none" d="M0 0h24v24H0z"></path>
+            <path fill="currentColor" d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"></path>
+          </svg>
           <span>选择文件</span>
         </button>
       </div>
       {
-        files && files.length > 1 ? (
+        moreFile ? (
           <div
             className='jx-upload-all jx-upload'
             onClick={uploadAll}
@@ -93,7 +100,7 @@ const Upload:FC<UploadProps> = ({ url }) => {
         ) : null
       }
       {
-        allLoading ? <Loading theme='dark' /> : null
+        moreFile && allLoading ? <Loading theme='dark' /> : null
       }
       <div className="jx-upload-preview">
         {
@@ -102,16 +109,14 @@ const Upload:FC<UploadProps> = ({ url }) => {
               <Preview 
                 key={idx}
                 file={file}
-                loading={singleLoading[file.name] || false}
+                loading={singleStatus[file.name] ? singleStatus[file.name].loading : false}
+                error={singleStatus[file.name] ? singleStatus[file.name].error : false}
                 onUpload={singleUpload}
                 onAbort={singleAbort}
               />
             ))
           ) : '暂无待上传图片'
         }
-      </div>
-      <div className="jx-upload-process">
-        
       </div>
     </div>
   )

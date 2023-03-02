@@ -9,5 +9,3 @@ export const CHECKFILESPATH = '/checkFiles'
 export const LOADINGMINTIME = 500
 /** 分包大小 */
 export const CHUNKSIZE = 2 * 1024 * 1024
-/** 多文件时统一上传的假定文件名，统一一个 否则会导致存储变大 */
-// export const ALLFILENAME = 'ALL_FILE_NAME'

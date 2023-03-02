@@ -11,7 +11,7 @@ const CHECKFILESPATH = '/checkFiles'
 /** 资源存储的路径 */
 const STATICPATH = path.join(__dirname, '/assets')
 /** 白名单 */
-const ALLOWORIGIN = ['http://localhost:3000', 'http://10.17.223.232:3000'];
+const ALLOWORIGIN = ['http://localhost', 'http://10.17.223.232'];
 
 module.exports = {
   PORT, UPLOADFILESPATH, MERGEFILESPATH, CHECKFILESPATH, STATICPATH, ALLOWORIGIN

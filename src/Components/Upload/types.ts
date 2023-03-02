@@ -23,9 +23,14 @@ export interface RequsetProps {
   onError?: (err: Error | boolean) => void
 }
 
+export type StatusItem ={ loading: boolean, error: Error | boolean }
+/** 记录状态 */
+export type StatusList = Record<string, StatusItem>
+
 /** 中断请求使用，记录内容 文件名：中断方法 */
 export type RequestListType = Record<string, AbortController | null>
 
+/** 上传文件时发送的信息 */
 export enum ChunkInfoEnum {
   fileName = 'fileName',
   chunkIndex = 'chunkIndex',

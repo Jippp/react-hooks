@@ -1,6 +1,6 @@
 import SparkMD5 from "spark-md5";
 
-import { CHUNKSIZE } from '../config'
+import { CHUNKSIZE, LOADINGMINTIME } from './config'
 
 /**
  * 通过spark-md5获取文件hash
@@ -54,4 +54,17 @@ export const sliceFile = (file: File): {
   return {
     chunkCount: chunkIndex, chunkList
   }
+}
+
+/**
+ * loading变化兜底
+ * @param setLoading 设置loading的方法
+ * @param status loading状态
+ * @param delay 最小时间
+ * @returns NodeJs.Timeout
+ */
+export const delayLoading = (setLoading: (status: boolean) => void, status: boolean, delay = LOADINGMINTIME): NodeJS.Timeout => {
+  return setTimeout(() => {
+    setLoading(status)
+  }, delay)
 }
