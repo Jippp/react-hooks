@@ -1,7 +1,8 @@
+import { FC } from 'react'
 import { useSelector } from './context' 
 // import { useCtx } from './context'
 
-const Daughter = () => {
+const Daughter: FC = () => {
   console.log('daughter render!')
   const daughterName = useSelector(state => state.daughterName)
   // const { state: { daughterName } } = useCtx()

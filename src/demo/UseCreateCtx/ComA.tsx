@@ -1,15 +1,15 @@
-import { useCallback } from 'react'
+import { FC, ChangeEvent, useCallback } from 'react'
 import { useCtx } from './provider'
 
 // 子组件
-const ComA = () => {
+const ComA: FC = () => {
 
   const { 
     state: { message },
     update
    } = useCtx()
 
-  const handleChange = useCallback((e) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target.value
     update(d => {
       d.message = target

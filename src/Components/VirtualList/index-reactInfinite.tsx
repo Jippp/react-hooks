@@ -1,8 +1,12 @@
-import { useState, useMemo } from 'react'
+import { FC, useState, useMemo } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import './index.css'
+import './style.less'
 
-const ReactInfinite = ({ listData }) => {
+interface Props {
+  listData: number[]
+}
+
+const ReactInfinite: FC<Props> = ({ listData }) => {
   const [list, setList] = useState(listData)
 
   const dataLength = useMemo(() => {
@@ -11,6 +15,7 @@ const ReactInfinite = ({ listData }) => {
 
   return (
     <InfiniteScroll
+      loader={<h4>Loading...</h4>}
       dataLength={dataLength}
       next={() => setList(d => d.concat(Array.from(new Array(10000), (_, i) => d.length + i)))}
       hasMore={true}
