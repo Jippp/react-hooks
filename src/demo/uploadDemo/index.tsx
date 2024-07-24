@@ -7,7 +7,7 @@ const UploadDemo: FC<any> = () => {
   return (
     <div className="demo-container">
       <Upload
-        url='http://10.17.223.232:8081'
+        url='http://localhost:8081'
       />
     </div>
   )
